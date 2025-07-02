@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Financial Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f4f4f4 60%, #eaf6fb 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #5EA4C2;
+            color: #fff;
+            box-shadow: 2px 0 16px #5ea4c233;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .sidebar-nav a {
+            color: #fff;
+            background: #6093C0;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 8px 0 0 8px;
+            margin: 0 0 0 18px;
+            font-size: 1.08rem;
+            font-weight: 500;
+            transition: background 0.2s, box-shadow 0.2s, margin-left 0.2s;
+            box-shadow: 0 2px 8px #5ea4c22a;
+            position: relative;
+        }
+        .sidebar-nav a.active,
+        .sidebar-nav a:focus {
+            background: #816CA6;
+            color: #fff;
+            margin-left: 0;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .sidebar-nav a:hover {
+            background: #6E81B8;
+            margin-left: 0;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            margin-bottom: 24px;
+            color: #eaf6fb;
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 32px 28px;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px #bbb;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h2 { text-align: center; margin-bottom: 12px; color: #5EA4C2; font-size: 2rem; }
+        .desc { text-align: center; color: #555; margin-bottom: 24px; font-size: 16px; }
+        .section-title {
+            font-size: 18px;
+            margin-top: 32px;
+            color: #816CA6;
+            font-weight: bold;
+            border-bottom: 2px solid #f4f4f4;
+            padding-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        label { display: block; margin-top: 18px; font-weight: bold; color: #6093C0; }
+        .input-group { margin-bottom: 18px; }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 4px;
+            border-radius: 6px;
+            border: 1.5px solid #ccc;
+            font-size: 16px;
+            background: #f9f9fc;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus, textarea:focus {
+            border-color: #816CA6;
+            outline: none;
+            box-shadow: 0 0 0 2px #816ca633;
+        }
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        button, .button-row button {
+            flex: 1;
+            padding: 13px;
+            background: #816CA6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px #816ca62a;
+        }
+        button:hover, .button-row button:hover {
+            background: #90568B;
+            box-shadow: 0 4px 16px #90568b2a;
+        }
+        #clearBtn { background: #aaa; }
+        #clearBtn:hover { background: #888; }
+        .results {
+            margin-top: 28px;
+            background: linear-gradient(120deg, #f1f7ff 80%, #eaf6fb 100%);
+            padding: 28px 18px 20px 18px;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px #6093c022, 0 1.5px 8px #e0eaff;
+            border: 2px solid #5EA4C2;
+            animation: fadeIn 0.7s;
+            text-align: left;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .results strong {
+            font-size: 1.25rem;
+            color: #816CA6;
+            display: block;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        .result-row {
+            margin-top: 16px;
+            font-size: 1.08rem;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px 14px;
+            box-shadow: 0 1px 4px #e0eaff;
+            border: 1px solid #e3eaf3;
+            margin-bottom: 8px;
+        }
+        .result-label {
+            min-width: 170px;
+            font-weight: 500;
+            color: #6093C0;
+            font-size: 1rem;
+        }
+        .result-value {
+            font-family: 'Consolas', monospace;
+            color: #964069;
+            font-size: 1.08rem;
+            margin-left: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .error { color: #964069; margin-top: 12px; font-size: 15px; }
+        .tooltip {
+            border-bottom: 1px dotted #888;
+            cursor: help;
+            text-decoration: none;
+            margin-left: 4px;
+            color: #6093C0;
+            font-size: 15px;
+        }
+        .card {
+            background: #f9f9fc;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px #e0eaff;
+            border: 1px solid #eee;
+        }
+        @media (max-width: 900px) {
+            .sidebar { width: 100vw; height: auto; flex-direction: row; padding: 0; box-shadow: 0 2px 12px #5ea4c233; }
+            .sidebar-nav { flex-direction: row; gap: 0; margin: 0 0 0 16px; }
+            .sidebar-nav a { border-radius: 8px; margin: 0 8px 0 0; padding: 10px 18px; font-size: 1rem; }
+            .container { 
+                margin-left: auto; 
+                margin-right: auto; 
+                margin-top: 120px; 
+            }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            h2 { font-size: 22px; }
+            .results {
+                padding: 14px 4px 10px 4px;
+                max-width: 98vw;
+            }
+            .result-row {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 8px 6px;
+            }
+            .result-label {
+                min-width: 0;
+                font-size: 0.97rem;
+            }
+            .result-value {
+                margin-left: 0;
+                margin-top: 2px;
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+          .then(response => response.text())
+          .then(data => document.getElementById('header-placeholder').innerHTML = data);
+    </script>
+    <div class="sidebar">
+        <!-- Removed <h1>Financial Tools</h1> to avoid duplicate header -->
+        <nav class="sidebar-nav">
+            <a href="financial-calculator.html" class="active">Financial Calculator</a>
+            <a href="interest-rate-calculator.html">Interest Rate Calculator</a>
+            <a href="debt-optimizer.html">Debt Repayment Optimizer</a>
+            <a href="compound-interest-calculator.html">Compound Interest Calculator</a>
+            <a href="index.html">Home</a>
+        </nav>
+        <div class="sidebar-footer">
+            &copy; 2025 Humber College
+        </div>
+    </div>
+    <div class="container">
+        <h2>Financial Calculator</h2>
+        <div class="desc">Calculate <b>NPV</b>, <b>IRR</b>, <b>Payback Period</b>, and <b>ROI</b> for your investment scenario.</div>
+        <div class="section-title">Input Parameters</div>
+        <form id="financeForm" autocomplete="off">
+            <div class="input-group card">
+                <label for="initialInvestment">
+                    Initial Investment ($)
+                    <span class="tooltip" title="The upfront amount you invest.">?</span>
+                </label>
+                <input type="number" id="initialInvestment" step="0.01" min="0" required placeholder="e.g. 5000">
+            </div>
+            <div class="input-group card">
+                <label for="cashFlows">
+                    Projected Cash Flows
+                    <span class="tooltip" title="Enter yearly cash flows separated by commas. Negative values allowed.">?</span>
+                </label>
+                <textarea id="cashFlows" rows="2" required placeholder="e.g. 1000, 1200, 1500"></textarea>
+            </div>
+            <div class="input-group card">
+                <label for="discountRate">
+                    Discount Rate (%)
+                    <span class="tooltip" title="Annual discount rate as a percentage.">?</span>
+                </label>
+                <input type="number" id="discountRate" step="0.01" min="0" required placeholder="e.g. 8">
+            </div>
+            <div class="button-row">
+                <button type="submit">Calculate</button>
+                <button type="button" id="clearBtn">Clear</button>
+            </div>
+            <div class="error" id="errorMsg"></div>
+        </form>
+        <div class="section-title" style="margin-top:32px;">Results</div>
+        <div class="results" id="results" style="display:none;">
+            <strong>Results:</strong>
+            <div class="result-row"><span class="result-label">Net Present Value (NPV)
+                <span class="tooltip" title="The present value of all cash flows, discounted at the given rate.">?</span>:</span>
+                <span class="result-value" id="npv"></span>
+            </div>
+            <div class="result-row"><span class="result-label">Internal Rate of Return (IRR)
+                <span class="tooltip" title="The discount rate that makes NPV zero.">?</span>:</span>
+                <span class="result-value" id="irr"></span>
+            </div>
+            <div class="result-row"><span class="result-label">Payback Period
+                <span class="tooltip" title="Years needed to recover the initial investment.">?</span>:</span>
+                <span class="result-value" id="payback"></span>
+            </div>
+            <div class="result-row"><span class="result-label">Return on Investment (ROI)
+                <span class="tooltip" title="Total net return divided by initial investment.">?</span>:</span>
+                <span class="result-value" id="roi"></span>
+            </div>
+        </div>
+    </div>
+    <script>
+        const form = document.getElementById('financeForm');
+        const initialInput = document.getElementById('initialInvestment');
+        const cashFlowsInput = document.getElementById('cashFlows');
+        const discountRateInput = document.getElementById('discountRate');
+        const errorMsg = document.getElementById('errorMsg');
+        const resultsDiv = document.getElementById('results');
+        const npvDiv = document.getElementById('npv');
+        const irrDiv = document.getElementById('irr');
+        const paybackDiv = document.getElementById('payback');
+        const roiDiv = document.getElementById('roi');
+        const clearBtn = document.getElementById('clearBtn');
+
+        function formatCurrency(num) {
+            return num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        }
+        function formatPercent(num) {
+            return (num * 100).toFixed(2) + '%';
+        }
+
+        function calculateNPV(initial, cashFlows, rate) {
+            let npv = -initial;
+            for (let t = 0; t < cashFlows.length; t++) {
+                npv += cashFlows[t] / Math.pow(1 + rate, t + 1);
+            }
+            return npv;
+        }
+
+        function calculateIRR(initial, cashFlows, guess = 0.1) {
+            let maxIter = 1000, tol = 1e-7, rate = guess;
+            for (let i = 0; i < maxIter; i++) {
+                let npv = -initial;
+                let d_npv = 0;
+                for (let t = 0; t < cashFlows.length; t++) {
+                    npv += cashFlows[t] / Math.pow(1 + rate, t + 1);
+                    d_npv -= (t + 1) * cashFlows[t] / Math.pow(1 + rate, t + 2);
+                }
+                if (Math.abs(d_npv) < 1e-10) break; // Avoid division by zero
+                let newRate = rate - npv / d_npv;
+                if (Math.abs(newRate - rate) < tol) return newRate;
+                rate = newRate;
+            }
+            return NaN;
+        }
+
+        function calculatePayback(initial, cashFlows) {
+            let cumulative = -initial;
+            for (let t = 0; t < cashFlows.length; t++) {
+                cumulative += cashFlows[t];
+                if (cumulative >= 0) {
+                    let prevCumulative = cumulative - cashFlows[t];
+                    let fraction = (initial - prevCumulative) / cashFlows[t];
+                    return t + fraction;
+                }
+            }
+            return null;
+        }
+
+        function calculateROI(initial, cashFlows) {
+            let totalReturn = cashFlows.reduce((a, b) => a + b, 0) - initial;
+            return totalReturn / initial;
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            errorMsg.textContent = '';
+            resultsDiv.style.display = 'none';
+
+            // Remove previous error highlights
+            [initialInput, cashFlowsInput, discountRateInput].forEach(el => el.style.borderColor = '#ccc');
+
+            const initial = parseFloat(initialInput.value);
+            const cashFlowsStr = cashFlowsInput.value;
+            const discountRate = parseFloat(discountRateInput.value) / 100;
+
+            let hasError = false;
+
+            if (isNaN(initial) || initial <= 0) {
+                errorMsg.textContent = 'Initial investment must be a positive number.';
+                initialInput.style.borderColor = '#b00020';
+                hasError = true;
+            }
+
+            let cashFlows = cashFlowsStr.split(',')
+                .map(s => s.trim())
+                .filter(s => s.length > 0)
+                .map(Number);
+
+            if (cashFlows.length === 0 || cashFlows.some(isNaN)) {
+                errorMsg.textContent = 'Please enter only valid numbers for cash flows, separated by commas.';
+                cashFlowsInput.style.borderColor = '#b00020';
+                hasError = true;
+            }
+
+            if (isNaN(discountRate) || discountRate < 0) {
+                errorMsg.textContent = 'Discount rate must be a non-negative number.';
+                discountRateInput.style.borderColor = '#b00020';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Calculations
+            const npv = calculateNPV(initial, cashFlows, discountRate);
+            const irr = calculateIRR(initial, cashFlows);
+            const payback = calculatePayback(initial, cashFlows);
+            const roi = calculateROI(initial, cashFlows);
+
+            // Output with color for NPV
+            npvDiv.innerHTML = 'Net Present Value (NPV): <span style="color:' + (npv >= 0 ? 'green' : 'red') + '">' + formatCurrency(npv) + '</span>';
+            irrDiv.textContent = 'Internal Rate of Return (IRR): ' + (isNaN(irr) ? 'N/A' : formatPercent(irr));
+            paybackDiv.textContent = 'Payback Period: ' + (payback === null ? 'Never' : payback.toFixed(2) + ' years');
+            roiDiv.textContent = 'Return on Investment (ROI): ' + (isFinite(roi) ? formatPercent(roi) : 'N/A');
+
+            resultsDiv.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Financial Tools - Home</title>
+    <style>
+        /* --- Base & Layout Styles --- */
+        body {
+            font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #eaf6fb 60%, #f4f4f4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #three-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+        }
+        #header-placeholder {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1001;
+            background: linear-gradient(135deg, #eaf6fb 60%, #f4f4f4 100%);
+        }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 60px;
+            background: linear-gradient(135deg, #5EA4C2 70%, #816CA6 100%);
+            box-shadow: 0 2px 12px #5ea4c233;
+        }
+        .header-title {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-links {
+            display: flex;
+            gap: 18px;
+        }
+        .header-links a {
+            color: #fff;
+            background: #6093C0;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+            box-shadow: 0 2px 8px #5ea4c22a;
+            position: relative;
+        }
+        .header-links a.active,
+        .header-links a:focus {
+            background: #816CA6;
+            color: #fff;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .header-links a:hover {
+            background: #816CA6;
+            color: #fff;
+            transform: scale(1.04);
+            box-shadow: 0 6px 20px #816ca62a;
+        }
+        .main {
+            position: relative;
+            z-index: 1;
+            box-sizing: border-box;
+            max-width: 540px;
+            background: linear-gradient(120deg, #fff 80%, #eaf6fb 100%);
+            padding: 48px 36px 36px 36px;
+            border-radius: 28px;
+            box-shadow: 0 8px 32px #6093c033, 0 1.5px 8px #e0eaff;
+            border: 1.5px solid #e3eaf3;
+            animation: fadeIn 0.7s;
+            text-align: center;
+            margin: 0 auto;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .welcome-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 18px;
+            display: block;
+        }
+        .main h2 {
+            color: #816CA6;
+            font-size: 2.5rem;
+            margin-bottom: 18px;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+        .main p {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+        .site-footer {
+            width: 100%;
+            text-align: center;
+            padding: 18px 0 14px 0;
+            font-size: 1rem;
+            color: #fff;
+            background: linear-gradient(135deg, #5EA4C2 70%, #816CA6 100%);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            z-index: 1002;
+            letter-spacing: 1px;
+            box-shadow: 0 -2px 12px #5ea4c233;
+        }
+        @media (max-width: 900px) {
+            .header-nav {
+                flex-direction: column;
+                align-items: flex-start;
+                height: auto;
+                padding: 12px 8px;
+                gap: 8px;
+            }
+            .header-title {
+                font-size: 1.3rem;
+            }
+            .header-links {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            .main {
+                margin-top: 120px;
+                padding: 24px 10px;
+            }
+            .site-footer {
+                font-size: 0.95rem;
+                padding: 12px 0 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="three-bg"></div>
+    <div id="header-placeholder">
+        <div class="header-nav">
+            <div class="header-title">
+                <span style="font-size:1.7rem;">💼</span> Financial Tools
+            </div>
+            <nav class="header-links">
+                <a href="financial-calculator.html">Financial Calculator</a>
+                <a href="interest-rate-calculator.html">Interest Rate Calculator</a>
+                <a href="debt-optimizer.html">Debt Repayment Optimizer</a>
+                <a href="compound-interest-calculator.html">Compound Interest Calculator</a>
+                <a href="index.html" class="active">Home</a>
+            </nav>
+        </div>
+    </div>
+    <div class="main">
+        <span class="welcome-emoji">👋</span>
+        <h2>Welcome!</h2>
+        <p>Select a tool from the navigation bar to get started.</p>
+    </div>
+    <footer class="site-footer">
+        &copy; 2025 Parjad Minooei
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+    <script>
+        // Money bill texture as a base64 SVG (simple green bill with $)
+        const billSVG = `
+            <svg width="128" height="64" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="120" height="56" rx="10" fill="#7ed957" stroke="#388e3c" stroke-width="6"/>
+                <text x="64" y="40" font-size="32" font-family="Arial" fill="#388e3c" text-anchor="middle" alignment-baseline="middle">$</text>
+            </svg>
+        `;
+        const billTexture = new THREE.TextureLoader().load(
+            'data:image/svg+xml;base64,' + btoa(billSVG)
+        );
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setClearColor(0x000000, 0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('three-bg').appendChild(renderer.domElement);
+
+        // Create floating money bills (as planes)
+        const bills = [];
+        const billGeometry = new THREE.PlaneGeometry(2, 1);
+        for (let i = 0; i < 18; i++) {
+            const material = new THREE.MeshBasicMaterial({
+                map: billTexture,
+                transparent: true,
+                opacity: 0.7 + Math.random() * 0.2,
+                side: THREE.DoubleSide,
+                depthWrite: false
+            });
+            const mesh = new THREE.Mesh(billGeometry, material);
+            mesh.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 12,
+                (Math.random() - 0.5) * 20
+            );
+            mesh.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                Math.random() * Math.PI
+            );
+            mesh.userData = {
+                baseX: mesh.position.x,
+                baseY: mesh.position.y,
+                baseZ: mesh.position.z,
+                speed: Math.random() * 0.5 + 0.5,
+                rotSpeed: Math.random() * 0.01 + 0.005
+            };
+            scene.add(mesh);
+            bills.push(mesh);
+        }
+        camera.position.z = 12;
+
+        let mouse = { x: 0, y: 0 };
+        document.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.0005;
+            bills.forEach((bill, i) => {
+                bill.position.y = bill.userData.baseY + Math.sin(time * bill.userData.speed + i) * 1.2 + mouse.y * 2;
+                bill.position.x = bill.userData.baseX + Math.cos(time * bill.userData.speed + i) * 1.2 + mouse.x * 2;
+                bill.rotation.z += bill.userData.rotSpeed;
+                bill.rotation.y += bill.userData.rotSpeed * 0.5;
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

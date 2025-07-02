@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interest Rate Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f4f4f4 60%, #eaf6fb 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #5EA4C2;
+            color: #fff;
+            box-shadow: 2px 0 16px #5ea4c233;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .sidebar-nav a {
+            color: #fff;
+            background: #6093C0;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 8px 0 0 8px;
+            margin: 0 0 0 18px;
+            font-size: 1.08rem;
+            font-weight: 500;
+            transition: background 0.2s, box-shadow 0.2s, margin-left 0.2s;
+            box-shadow: 0 2px 8px #5ea4c22a;
+            position: relative;
+        }
+        .sidebar-nav a.active,
+        .sidebar-nav a:focus {
+            background: #816CA6;
+            color: #fff;
+            margin-left: 0;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .sidebar-nav a:hover {
+            background: #6E81B8;
+            margin-left: 0;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            margin-bottom: 24px;
+            color: #eaf6fb;
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 32px 28px;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px #bbb;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h2 { text-align: center; margin-bottom: 8px; color: #5EA4C2; }
+        .desc { text-align: center; color: #555; margin-bottom: 24px; font-size: 16px; }
+        .section-title {
+            font-size: 18px;
+            margin-top: 32px;
+            color: #816CA6;
+            font-weight: bold;
+            border-bottom: 2px solid #f4f4f4;
+            padding-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        label { display: block; margin-top: 18px; font-weight: bold; color: #6093C0; }
+        .input-group { margin-bottom: 18px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 4px;
+            border-radius: 6px;
+            border: 1.5px solid #ccc;
+            font-size: 16px;
+            background: #f9f9fc;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus {
+            border-color: #816CA6;
+            outline: none;
+            box-shadow: 0 0 0 2px #816ca633;
+        }
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        button, .button-row button {
+            flex: 1;
+            padding: 13px;
+            background: #816CA6;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px #816ca62a;
+        }
+        button:hover, .button-row button:hover {
+            background: #90568B;
+            box-shadow: 0 4px 16px #90568b2a;
+        }
+        #clearRateBtn { background: #aaa; }
+        #clearRateBtn:hover { background: #888; }
+        .results {
+            margin-top: 28px;
+            background: #f1f7ff;
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 1px 8px #e0eaff;
+            animation: fadeIn 0.7s;
+            border: 1.5px solid #5EA4C2;
+        }
+        .results strong { font-size: 20px; color: #6093C0; }
+        .result-row { margin-top: 16px; font-size: 18px; display: flex; align-items: center; }
+        .result-label { min-width: 180px; font-weight: 500; color: #816CA6; }
+        .result-value { font-family: 'Consolas', monospace; color: #964069; }
+        .error { color: #964069; margin-top: 12px; font-size: 15px; }
+        .tooltip {
+            border-bottom: 1px dotted #888;
+            cursor: help;
+            text-decoration: none;
+            margin-left: 4px;
+            color: #6093C0;
+            font-size: 15px;
+        }
+        .card {
+            background: #f9f9fc;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px #e0eaff;
+            border: 1px solid #eee;
+        }
+        @media (max-width: 900px) {
+            .sidebar { width: 100vw; height: auto; flex-direction: row; padding: 0; box-shadow: 0 2px 12px #5ea4c233; }
+            .sidebar-nav { flex-direction: row; gap: 0; margin: 0 0 0 16px; }
+            .sidebar-nav a { border-radius: 8px; margin: 0 8px 0 0; padding: 10px 18px; font-size: 1rem; }
+            .container { 
+                margin-left: auto; 
+                margin-right: auto; 
+                margin-top: 120px; 
+            }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            h2 { font-size: 22px; }
+            .result-label { min-width: 120px; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+          .then(response => response.text())
+          .then(data => document.getElementById('header-placeholder').innerHTML = data);
+    </script>
+    <div class="sidebar">
+        <!-- Removed <h1>Financial Tools</h1> to avoid duplicate header -->
+        <nav class="sidebar-nav">
+            <a href="financial-calculator.html">Financial Calculator</a>
+            <a href="interest-rate-calculator.html" class="active">Interest Rate Calculator</a>
+            <a href="debt-optimizer.html">Debt Repayment Optimizer</a>
+            <a href="compound-interest-calculator.html">Compound Interest Calculator</a>
+            <a href="index.html">Home</a>
+        </nav>
+        <div class="sidebar-footer">
+            &copy; 2025 Humber College
+        </div>
+    </div>
+    <div class="container">
+        <h2>Interest Rate Calculator</h2>
+        <div class="desc">Calculate the interest rate required to reach a future value given an initial investment and number of periods.</div>
+        <div class="section-title">Input Parameters</div>
+        <form id="interestForm" autocomplete="off">
+            <div class="input-group card">
+                <label for="pv">
+                    Initial Investment (Present Value, $)
+                    <span class="tooltip" title="The amount you start with.">?</span>
+                </label>
+                <input type="number" id="pv" step="0.01" min="0" required placeholder="e.g. 5000">
+            </div>
+            <div class="input-group card">
+                <label for="fv">
+                    Future Value ($)
+                    <span class="tooltip" title="The amount you want to reach.">?</span>
+                </label>
+                <input type="number" id="fv" step="0.01" min="0" required placeholder="e.g. 8000">
+            </div>
+            <div class="input-group card">
+                <label for="periods">
+                    Number of Periods (Years)
+                    <span class="tooltip" title="How many years to reach the future value.">?</span>
+                </label>
+                <input type="number" id="periods" step="1" min="1" required placeholder="e.g. 5">
+            </div>
+            <div class="button-row">
+                <button type="submit">Calculate Rate</button>
+                <button type="button" id="clearRateBtn">Clear</button>
+            </div>
+            <div class="error" id="rateError"></div>
+        </form>
+        <div class="section-title" style="margin-top:32px;">Results</div>
+        <div class="results" id="rateResults" style="display:none;">
+            <strong>Results:</strong>
+            <div class="result-row">
+                <span class="result-label">Rate per Period:</span>
+                <span class="result-value" id="rate"></span>
+            </div>
+        </div>
+    </div>
+    <script>
+        const interestForm = document.getElementById('interestForm');
+        const pvInput = document.getElementById('pv');
+        const fvInput = document.getElementById('fv');
+        const periodsInput = document.getElementById('periods');
+        const rateError = document.getElementById('rateError');
+        const rateResults = document.getElementById('rateResults');
+        const rateDiv = document.getElementById('rate');
+        const clearRateBtn = document.getElementById('clearRateBtn');
+
+        function formatPercent(num) {
+            return (num * 100).toFixed(2) + '%';
+        }
+
+        interestForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            rateError.textContent = '';
+            rateResults.style.display = 'none';
+
+            const pv = parseFloat(pvInput.value);
+            const fv = parseFloat(fvInput.value);
+            const n = parseInt(periodsInput.value);
+
+            if (isNaN(pv) || pv <= 0) {
+                rateError.textContent = 'Initial investment must be a positive number.';
+                return;
+            }
+            if (isNaN(fv) || fv <= 0) {
+                rateError.textContent = 'Future value must be a positive number.';
+                return;
+            }
+            if (isNaN(n) || n <= 0) {
+                rateError.textContent = 'Number of periods must be a positive integer.';
+                return;
+            }
+
+            // Interest rate calculation
+            const rate = Math.pow(fv / pv, 1 / n) - 1;
+            rateDiv.textContent = isFinite(rate) && rate >= 0 ? formatPercent(rate) : 'N/A';
+            rateResults.style.display = 'block';
+        });
+
+        clearRateBtn.addEventListener('click', function() {
+            interestForm.reset();
+            rateResults.style.display = 'none';
+            rateError.textContent = '';
+        });
+    </script>
+</body>
+</html>

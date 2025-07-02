@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .universal-header {
+            width: 100%;
+            background: linear-gradient(90deg, #5EA4C2 60%, #816CA6 100%);
+            color: #fff;
+            text-align: center;
+            padding: 32px 0 22px 0;
+            font-size: 2.3rem;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 18px #5ea4c233;
+            margin-bottom: 36px;
+            position: relative;
+            border-bottom: 3px solid #6093C0;
+        }
+        .header-icon {
+            font-size: 2.1rem;
+            vertical-align: middle;
+            margin-right: 12px;
+            opacity: 0.92;
+        }
+        .header-title {
+            vertical-align: middle;
+        }
+        @media (max-width: 600px) {
+            .universal-header {
+                font-size: 1.3rem;
+                padding: 18px 0 12px 0;
+            }
+            .header-icon {
+                font-size: 1.3rem;
+                margin-right: 7px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="universal-header">
+        <span class="header-icon" aria-hidden="true">💼</span>
+        <span class="header-title">Financial Tool</span>
+    </div>
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+          .then(response => response.text())
+          .then(data => document.getElementById('header-placeholder').innerHTML = data);
+    </script>
+</body>
+</html>

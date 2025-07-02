@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debt Repayment Optimizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f4f4f4 60%, #eaf6fb 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #5EA4C2;
+            color: #fff;
+            box-shadow: 2px 0 16px #5ea4c233;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .sidebar-nav a {
+            color: #fff;
+            background: #6093C0;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 8px 0 0 8px;
+            margin: 0 0 0 18px;
+            font-size: 1.08rem;
+            font-weight: 500;
+            transition: background 0.2s, box-shadow 0.2s, margin-left 0.2s;
+            box-shadow: 0 2px 8px #5ea4c22a;
+            position: relative;
+        }
+        .sidebar-nav a.active,
+        .sidebar-nav a:focus {
+            background: #816CA6;
+            color: #fff;
+            margin-left: 0;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .sidebar-nav a:hover {
+            background: #6E81B8;
+            margin-left: 0;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            margin-bottom: 24px;
+            color: #eaf6fb;
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+        .container, .main {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px #bbb;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h2 { text-align: center; margin-bottom: 8px; color: #5EA4C2; }
+        .desc { text-align: center; color: #555; margin-bottom: 20px; font-size: 15px; }
+        button, .button-row button {
+            background: #816CA6;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 18px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 0;
+            transition: background 0.2s;
+        }
+        button:hover, .button-row button:hover {
+            background: #90568B;
+        }
+        .error { color: #964069; margin-top: 10px; }
+        .danger, .remove-btn {
+            background: #964069;
+        }
+        .danger:hover, .remove-btn:hover {
+            background: #90568B;
+        }
+        .debt-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .debt-row input[type="text"] { width: 20%; }
+        .debt-row input[type="number"] { width: 18%; }
+        .debt-row button {
+            background: #964069;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            cursor: pointer;
+            margin-left: 0;
+            transition: background 0.2s;
+        }
+        .debt-row button:hover {
+            background: #90568B;
+        }
+        @media (max-width: 900px) {
+            .sidebar { width: 100vw; height: auto; flex-direction: row; padding: 0; box-shadow: 0 2px 12px #5ea4c233; }
+            .sidebar-nav { flex-direction: row; gap: 0; margin: 0 0 0 16px; }
+            .sidebar-nav a { border-radius: 8px; margin: 0 8px 0 0; padding: 10px 18px; font-size: 1rem; }
+            .container, .main { 
+                margin-left: auto; 
+                margin-right: auto; 
+                margin-top: 120px; 
+            }
+        }
+        @media (max-width: 600px) {
+            .container, .main { padding: 10px; }
+            h2 { font-size: 22px; }
+        }
+        .site-footer {
+            width: 100%;
+            text-align: center;
+            padding: 18px 0 14px 0;
+            font-size: 1rem;
+            color: #fff;
+            background: linear-gradient(135deg, #5EA4C2 70%, #816CA6 100%);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            z-index: 1002;
+            letter-spacing: 1px;
+            box-shadow: 0 -2px 12px #5ea4c233;
+        }
+        @media (max-width: 900px) {
+            .site-footer {
+                font-size: 0.95rem;
+                padding: 12px 0 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+          .then(response => response.text())
+          .then(data => document.getElementById('header-placeholder').innerHTML = data);
+    </script>
+    <div class="sidebar">
+        <!-- Removed <h1>Financial Tools</h1> to avoid duplicate header -->
+        <nav class="sidebar-nav">
+            <a href="financial-calculator.html">Financial Calculator</a>
+            <a href="interest-rate-calculator.html">Interest Rate Calculator</a>
+            <a href="debt-optimizer.html" class="active">Debt Repayment Optimizer</a>
+            <a href="compound-interest-calculator.html">Compound Interest Calculator</a>
+            <a href="index.html">Home</a>
+        </nav>
+        <div class="sidebar-footer">
+            &copy; 2025 Humber College
+        </div>
+    </div>
+    <div class="container">
+        <h2>Debt Repayment Optimizer</h2>
+        <div class="desc">
+            Enter your debts and monthly budget. Compare the avalanche and snowball repayment strategies.
+        </div>
+        <form id="debtsForm" autocomplete="off">
+            <div id="debtsList">
+                <div class="debt-row">
+                    <input type="text" placeholder="Debt Name" required>
+                    <input type="number" placeholder="Balance ($)" min="0" step="0.01" required>
+                    <input type="number" placeholder="Interest Rate (%)" min="0" step="0.01" required>
+                    <input type="number" placeholder="Min Payment ($)" min="0" step="0.01" required>
+                    <button type="button" onclick="removeDebtRow(this)">Remove</button>
+                </div>
+            </div>
+            <button type="button" onclick="addDebtRow()">Add Another Debt</button>
+            <div style="margin-top:16px;">
+                <input type="number" id="monthlyBudget" placeholder="Total Monthly Budget ($)" min="0" step="0.01" required style="width:60%;">
+            </div>
+            <div class="button-row" style="margin-top:20px;">
+                <button type="submit">Calculate</button>
+            </div>
+            <div class="error" id="errorMsg"></div>
+        </form>
+        <div id="results" style="margin-top:32px; display:none;">
+            <!-- Results will be shown here -->
+        </div>
+    </div>
+    <script>
+        function addDebtRow() {
+            const row = document.createElement('div');
+            row.className = 'debt-row';
+            row.innerHTML = `
+                <input type="text" placeholder="Debt Name" required>
+                <input type="number" placeholder="Balance ($)" min="0" step="0.01" required>
+                <input type="number" placeholder="Interest Rate (%)" min="0" step="0.01" required>
+                <input type="number" placeholder="Min Payment ($)" min="0" step="0.01" required>
+                <button type="button" onclick="removeDebtRow(this)">Remove</button>
+            `;
+            document.getElementById('debtsList').appendChild(row);
+        }
+        function removeDebtRow(btn) {
+            btn.parentElement.remove();
+        }
+
+        function getDebts() {
+            const rows = document.querySelectorAll('#debtsList .debt-row');
+            const debts = [];
+            for (const row of rows) {
+                const [name, balance, rate, minPay] = row.querySelectorAll('input');
+                debts.push({
+                    name: name.value || "Debt",
+                    balance: parseFloat(balance.value),
+                    rate: parseFloat(rate.value) / 100,
+                    minPay: parseFloat(minPay.value)
+                });
+            }
+            return debts;
+        }
+
+        function cloneDebts(debts) {
+            return debts.map(d => ({...d}));
+        }
+
+        function simulateRepayment(debts, budget, method) {
+            // method: "avalanche" or "snowball"
+            let month = 0;
+            let totalInterest = 0;
+            let debtsCopy = cloneDebts(debts);
+            let schedule = [];
+            while (debtsCopy.some(d => d.balance > 0) && month < 600) { // 50 years max
+                month++;
+                // Sort debts
+                if (method === "avalanche") {
+                    debtsCopy.sort((a, b) => b.rate - a.rate || a.balance - b.balance);
+                } else {
+                    debtsCopy.sort((a, b) => a.balance - b.balance || b.rate - a.rate);
+                }
+                // Calculate minimum payments
+                let minTotal = debtsCopy.reduce((sum, d) => sum + (d.balance > 0 ? d.minPay : 0), 0);
+                let extra = Math.max(0, budget - minTotal);
+                // Pay debts
+                let payments = [];
+                for (let i = 0; i < debtsCopy.length; i++) {
+                    let d = debtsCopy[i];
+                    if (d.balance <= 0) {
+                        payments.push(0);
+                        continue;
+                    }
+                    let pay = d.minPay;
+                    // Extra goes to prioritized debt
+                    if (extra > 0 && i === 0) {
+                        pay += extra;
+                    }
+                    pay = Math.min(pay, d.balance + d.balance * d.rate / 12); // Don't overpay
+                    payments.push(pay);
+                }
+                // Apply payments and interest
+                for (let i = 0; i < debtsCopy.length; i++) {
+                    let d = debtsCopy[i];
+                    if (d.balance <= 0) continue;
+                    let interest = d.balance * d.rate / 12;
+                    totalInterest += interest;
+                    d.balance = d.balance + interest - payments[i];
+                    if (d.balance < 0.01) d.balance = 0;
+                }
+                // Save schedule for this month
+                schedule.push(debtsCopy.map(d => d.balance));
+            }
+            return {
+                months: month,
+                totalInterest: totalInterest,
+                schedule: schedule
+            };
+        }
+
+        function formatMonths(m) {
+            const years = Math.floor(m / 12);
+            const months = m % 12;
+            return years > 0 ? `${years} yr ${months} mo` : `${months} mo`;
+        }
+
+        document.getElementById('debtsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const debts = getDebts();
+            const budget = parseFloat(document.getElementById('monthlyBudget').value);
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = '';
+            if (debts.length === 0 || debts.some(d => isNaN(d.balance) || isNaN(d.rate) || isNaN(d.minPay) || d.balance <= 0 || d.minPay <= 0)) {
+                errorMsg.textContent = "Please enter valid values for all debts.";
+                return;
+            }
+            if (isNaN(budget) || budget <= 0) {
+                errorMsg.textContent = "Please enter a valid monthly budget.";
+                return;
+            }
+            const minTotal = debts.reduce((sum, d) => sum + d.minPay, 0);
+            if (budget < minTotal) {
+                errorMsg.textContent = "Budget must be at least the sum of minimum payments.";
+                return;
+            }
+
+            // Simulate both methods
+            const avalanche = simulateRepayment(debts, budget, "avalanche");
+            const snowball = simulateRepayment(debts, budget, "snowball");
+
+            // Show results
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <h3>Avalanche Method (Highest Interest First)</h3>
+                <ul>
+                    <li><b>Payoff Time:</b> ${formatMonths(avalanche.months)}</li>
+                    <li><b>Total Interest Paid:</b> $${avalanche.totalInterest.toFixed(2)}</li>
+                </ul>
+                <h3>Snowball Method (Smallest Balance First)</h3>
+                <ul>
+                    <li><b>Payoff Time:</b> ${formatMonths(snowball.months)}</li>
+                    <li><b>Total Interest Paid:</b> $${snowball.totalInterest.toFixed(2)}</li>
+                </ul>
+            `;
+        });
+    </script>
+</body>
+</html>

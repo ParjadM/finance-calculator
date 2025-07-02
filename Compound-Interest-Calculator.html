@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compound Interest Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #f4f4f4 60%, #eaf6fb 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        #three-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(135deg, #5EA4C2 70%, #816CA6 100%);
+            color: #fff;
+            box-shadow: 2px 0 24px #5ea4c244;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .sidebar-nav a {
+            color: #fff;
+            background: #6093C0;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 8px 0 0 8px;
+            margin: 0 0 0 18px;
+            font-size: 1.08rem;
+            font-weight: 500;
+            transition: background 0.2s, box-shadow 0.2s, margin-left 0.2s;
+            box-shadow: 0 2px 8px #5ea4c22a;
+            position: relative;
+        }
+        .sidebar-nav a.active,
+        .sidebar-nav a:focus {
+            background: #816CA6;
+            color: #fff;
+            margin-left: 0;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .sidebar-nav a:hover {
+            background: #6E81B8;
+            margin-left: 0;
+            box-shadow: 0 4px 16px #816ca62a;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            margin-bottom: 24px;
+            color: #eaf6fb;
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+        .container {
+            max-width: 350px;
+            min-width: 220px;
+            width: 95vw;
+            height: 425px;
+            margin: 60px auto 0 auto;
+            background: linear-gradient(120deg, #fff 90%, #eaf6fb 100%);
+            padding: 12px 8px 8px 8px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #6093c022, 0 1.5px 8px #e0eaff;
+            border: 1.5px solid #e3eaf3;
+            animation: fadeIn 0.7s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .container > div[style*="font-size"] {
+            font-size: 1.3rem !important;
+            margin-bottom: 4px !important;
+        }
+        h2 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        .desc {
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            text-align: center;
+            line-height: 1.2;
+        }
+        label {
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+        .input-group {
+            margin-bottom: 2px;
+        }
+        input, select {
+            width: 100%;
+            padding: 4px 5px;
+            margin-top: 1px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            background: #f9f9fc;
+        }
+        input:focus, select:focus {
+            border-color: #816CA6;
+            background: #f3f0fa;
+            outline: none;
+            box-shadow: 0 0 0 2px #816ca633;
+        }
+        .button-row {
+            display: flex;
+            gap: 3px;
+            margin-top: 4px;
+        }
+        button {
+            flex: 1;
+            padding: 5px;
+            font-size: 12px;
+            background: linear-gradient(90deg, #816CA6 60%, #5EA4C2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            box-shadow: 0 2px 8px #816ca62a;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #90568B 60%, #5EA4C2 100%);
+            box-shadow: 0 4px 16px #90568b2a;
+            transform: translateY(-2px) scale(1.03);
+        }
+        .results {
+            margin-top: 8px;
+            padding: 8px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            background: #f1f7ff;
+            border: 1px solid #5EA4C2;
+            box-shadow: 0 1px 4px #e0eaff;
+            text-align: center;
+            font-weight: 500;
+            animation: fadeIn 0.7s;
+        }
+        .error {
+            color: #964069;
+            margin-top: 3px;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .site-footer {
+            width: 100%;
+            text-align: center;
+            padding: 18px 0 14px 0;
+            font-size: 1rem;
+            color: #fff;
+            background: linear-gradient(135deg, #5EA4C2 70%, #816CA6 100%);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            z-index: 1002;
+            letter-spacing: 1px;
+            box-shadow: 0 -2px 12px #5ea4c233;
+        }
+        @media (max-width: 900px) {
+            .sidebar { width: 100vw; height: auto; flex-direction: row; padding: 0; box-shadow: 0 2px 12px #5ea4c233; }
+            .sidebar-nav { flex-direction: row; gap: 0; margin: 0 0 0 16px; }
+            .sidebar-nav a { border-radius: 8px; margin: 0 8px 0 0; padding: 10px 18px; font-size: 1rem; }
+            .container { 
+                margin-left: auto; 
+                margin-right: auto; 
+                margin-top: 120px; 
+            }
+            .site-footer {
+                font-size: 0.95rem;
+                padding: 12px 0 10px 0;
+            }
+        }
+        @media (max-width: 600px) {
+            .container {
+                max-width: 98vw;
+                padding: 10px 2vw;
+            }
+            h2 { font-size: 1.1rem; }
+        }
+        @media (max-width: 1100px) {
+            .container {
+                margin-left: auto;
+                flex-direction: column;
+                height: auto;
+                gap: 18px;
+                max-width: 98vw;
+            }
+            .container .results {
+                margin-left: 0;
+                margin-top: 18px;
+                width: 100%;
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+    <div id="three-bg"></div>
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+          .then(response => response.text())
+          .then(data => document.getElementById('header-placeholder').innerHTML = data);
+    </script>
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <a href="financial-calculator.html">Financial Calculator</a>
+            <a href="interest-rate-calculator.html">Interest Rate Calculator</a>
+            <a href="debt-optimizer.html">Debt Repayment Optimizer</a>
+            <a href="compound-interest-calculator.html" class="active">Compound Interest Calculator</a>
+            <a href="index.html">Home</a>
+        </nav>
+        <div class="sidebar-footer">
+            &copy; 2025 Humber College
+        </div>
+    </div>
+    <div class="container">
+        <div style="font-size:2.2rem; margin-bottom:10px;">🧮</div>
+        <h2>Compound Interest Calculator</h2>
+        <div class="desc">
+            Calculate the future value of your investment with compound interest.<br>
+            Enter your principal, annual interest rate, years, and compounding frequency.
+        </div>
+        <form id="compoundForm" autocomplete="off">
+            <div class="input-group">
+                <label for="principal">Principal Amount ($)</label>
+                <input type="number" id="principal" min="0" step="0.01" required placeholder="e.g. 1000">
+            </div>
+            <div class="input-group">
+                <label for="rate">Annual Interest Rate (%)</label>
+                <input type="number" id="rate" min="0" step="0.01" required placeholder="e.g. 5">
+            </div>
+            <div class="input-group">
+                <label for="years">Number of Years</label>
+                <input type="number" id="years" min="0" step="0.01" required placeholder="e.g. 10">
+            </div>
+            <div class="input-group">
+                <label for="frequency">Compounding Frequency</label>
+                <select id="frequency" required>
+                    <option value="1">Annually</option>
+                    <option value="12">Monthly</option>
+                    <option value="365">Daily</option>
+                </select>
+            </div>
+            <div class="button-row">
+                <button type="submit">Calculate</button>
+                <button type="button" id="clearBtn">Clear</button>
+            </div>
+            <div class="error" id="errorMsg"></div>
+        </form>
+        <div class="results" id="results" style="display:none;">
+            <strong>Future Value:</strong>
+            <div id="futureValue"></div>
+        </div>
+    </div>
+    <footer class="site-footer">
+        &copy; 2025 Parjad Minooei
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+    <script>
+        // Money bill texture as a base64 SVG (simple green bill with $)
+        const billSVG = `
+            <svg width="128" height="64" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="120" height="56" rx="10" fill="#7ed957" stroke="#388e3c" stroke-width="6"/>
+                <text x="64" y="40" font-size="32" font-family="Arial" fill="#388e3c" text-anchor="middle" alignment-baseline="middle">$</text>
+            </svg>
+        `;
+        const billTexture = new THREE.TextureLoader().load(
+            'data:image/svg+xml;base64,' + btoa(billSVG)
+        );
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setClearColor(0x000000, 0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('three-bg').appendChild(renderer.domElement);
+
+        // Create floating money bills (as planes)
+        const bills = [];
+        const billGeometry = new THREE.PlaneGeometry(2, 1);
+        for (let i = 0; i < 18; i++) {
+            const material = new THREE.MeshBasicMaterial({
+                map: billTexture,
+                transparent: true,
+                opacity: 0.7 + Math.random() * 0.2,
+                side: THREE.DoubleSide,
+                depthWrite: false
+            });
+            const mesh = new THREE.Mesh(billGeometry, material);
+            mesh.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 12,
+                (Math.random() - 0.5) * 20
+            );
+            mesh.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                Math.random() * Math.PI
+            );
+            mesh.userData = {
+                baseX: mesh.position.x,
+                baseY: mesh.position.y,
+                baseZ: mesh.position.z,
+                speed: Math.random() * 0.5 + 0.5,
+                rotSpeed: Math.random() * 0.01 + 0.005
+            };
+            scene.add(mesh);
+            bills.push(mesh);
+        }
+        camera.position.z = 12;
+
+        let mouse = { x: 0, y: 0 };
+        document.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.0005;
+            bills.forEach((bill, i) => {
+                bill.position.y = bill.userData.baseY + Math.sin(time * bill.userData.speed + i) * 1.2 + mouse.y * 2;
+                bill.position.x = bill.userData.baseX + Math.cos(time * bill.userData.speed + i) * 1.2 + mouse.x * 2;
+                bill.rotation.z += bill.userData.rotSpeed;
+                bill.rotation.y += bill.userData.rotSpeed * 0.5;
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Calculator logic
+        const form = document.getElementById('compoundForm');
+        const principalInput = document.getElementById('principal');
+        const rateInput = document.getElementById('rate');
+        const yearsInput = document.getElementById('years');
+        const freqInput = document.getElementById('frequency');
+        const errorMsg = document.getElementById('errorMsg');
+        const resultsDiv = document.getElementById('results');
+        const futureValueDiv = document.getElementById('futureValue');
+        const clearBtn = document.getElementById('clearBtn');
+
+        function formatCurrency(num) {
+            return num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            errorMsg.textContent = '';
+            resultsDiv.style.display = 'none';
+
+            // Remove previous error highlights
+            [principalInput, rateInput, yearsInput].forEach(el => el.style.borderColor = '#ccc');
+
+            const principal = parseFloat(principalInput.value);
+            const rate = parseFloat(rateInput.value);
+            const years = parseFloat(yearsInput.value);
+            const freq = parseInt(freqInput.value);
+
+            let hasError = false;
+
+            if (isNaN(principal) || principal <= 0) {
+                errorMsg.textContent = 'Principal must be a positive number.';
+                principalInput.style.borderColor = '#b00020';
+                hasError = true;
+            }
+            if (isNaN(rate) || rate <= 0) {
+                errorMsg.textContent = 'Interest rate must be a positive number.';
+                rateInput.style.borderColor = '#b00020';
+                hasError = true;
+            }
+            if (isNaN(years) || years <= 0) {
+                errorMsg.textContent = 'Years must be a positive number.';
+                yearsInput.style.borderColor = '#b00020';
+                hasError = true;
+            }
+            if (hasError) return;
+
+            // Compound interest formula
+            // FV = P * (1 + r/n)^(n*t)
+            const r = rate / 100;
+            const n = freq;
+            const t = years;
+            const fv = principal * Math.pow(1 + r / n, n * t);
+
+            futureValueDiv.textContent = formatCurrency(fv);
+            resultsDiv.style.display = 'block';
+        });
+
+        clearBtn.addEventListener('click', function() {
+            form.reset();
+            errorMsg.textContent = '';
+            resultsDiv.style.display = 'none';
+            [principalInput, rateInput, yearsInput].forEach(el => el.style.borderColor = '#ccc');
+        });
+    </script>
+</body>
+</html>
