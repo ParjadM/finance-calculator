@@ -5,11 +5,17 @@
     <title>Debt Repayment Optimizer</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
             background: linear-gradient(135deg, #f4f4f4 60%, #eaf6fb 100%);
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            overflow: hidden;
+        }
+        #three-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
         }
         .sidebar {
             position: fixed;
@@ -17,9 +23,9 @@
             left: 0;
             width: 260px;
             height: 100vh;
-            background: #5EA4C2;
+            background: linear-gradient(135deg, #5EA4C2 70%, #816CA6 100%);
             color: #fff;
-            box-shadow: 2px 0 16px #5ea4c233;
+            box-shadow: 2px 0 24px #5ea4c244;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -65,71 +71,85 @@
             opacity: 0.7;
         }
         .container, .main {
-            max-width: 700px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 24px;
+            max-width: 600px;
+            margin: 20px auto;
+            background: linear-gradient(120deg, #fff 90%, #eaf6fb 100%);
+            padding: 20px 24px;
             border-radius: 16px;
-            box-shadow: 0 2px 16px #bbb;
+            box-shadow: 0 8px 32px #6093c033, 0 1.5px 8px #e0eaff;
+            border: 1.5px solid #e3eaf3;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
+            z-index: 1;
         }
-        h2 { text-align: center; margin-bottom: 8px; color: #5EA4C2; }
-        .desc { text-align: center; color: #555; margin-bottom: 20px; font-size: 15px; }
+        h2 { text-align: center; margin-bottom: 8px; color: #5EA4C2; font-size: 1.6rem; }
+        .desc { text-align: center; color: #555; margin-bottom: 16px; font-size: 14px; }
         button, .button-row button {
-            background: #816CA6;
+            background: linear-gradient(135deg, #816CA6 0%, #5EA4C2 100%);
             color: #fff;
             border: none;
-            border-radius: 4px;
-            padding: 8px 18px;
-            font-size: 16px;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
             margin-left: 0;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px #816ca625;
         }
         button:hover, .button-row button:hover {
-            background: #90568B;
+            background: linear-gradient(135deg, #90568B 0%, #5EA4C2 100%);
+            box-shadow: 0 6px 24px #90568b35;
+            transform: translateY(-2px);
         }
-        .error { color: #964069; margin-top: 10px; }
+        .error { 
+            color: #dc3545; 
+            margin-top: 12px; 
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 1.5px solid #feb2b2;
+            border-radius: 6px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
         .danger, .remove-btn {
-            background: #964069;
+            background: linear-gradient(135deg, #964069 0%, #7c3aed 100%);
         }
         .danger:hover, .remove-btn:hover {
-            background: #90568B;
+            background: linear-gradient(135deg, #7c3aed 0%, #964069 100%);
         }
         .debt-row {
             display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 6px;
+            margin-bottom: 6px;
         }
-        .debt-row input[type="text"] { width: 20%; }
-        .debt-row input[type="number"] { width: 18%; }
+        .debt-row input[type="text"] { 
+            width: 20%; 
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+        .debt-row input[type="number"] { 
+            width: 18%; 
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
         .debt-row button {
-            background: #964069;
+            background: linear-gradient(135deg, #964069 0%, #7c3aed 100%);
             color: #fff;
             border: none;
-            border-radius: 4px;
-            padding: 6px 12px;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
             cursor: pointer;
             margin-left: 0;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
         }
         .debt-row button:hover {
-            background: #90568B;
-        }
-        @media (max-width: 900px) {
-            .sidebar { width: 100vw; height: auto; flex-direction: row; padding: 0; box-shadow: 0 2px 12px #5ea4c233; }
-            .sidebar-nav { flex-direction: row; gap: 0; margin: 0 0 0 16px; }
-            .sidebar-nav a { border-radius: 8px; margin: 0 8px 0 0; padding: 10px 18px; font-size: 1rem; }
-            .container, .main { 
-                margin-left: auto; 
-                margin-right: auto; 
-                margin-top: 120px; 
-            }
-        }
-        @media (max-width: 600px) {
-            .container, .main { padding: 10px; }
-            h2 { font-size: 22px; }
+            background: linear-gradient(135deg, #7c3aed 0%, #964069 100%);
+            transform: translateY(-1px);
         }
         .site-footer {
             width: 100%;
@@ -146,22 +166,28 @@
             box-shadow: 0 -2px 12px #5ea4c233;
         }
         @media (max-width: 900px) {
+            .sidebar { width: 100vw; height: auto; flex-direction: row; padding: 0; box-shadow: 0 2px 12px #5ea4c233; }
+            .sidebar-nav { flex-direction: row; gap: 0; margin: 0 0 0 16px; }
+            .sidebar-nav a { border-radius: 8px; margin: 0 8px 0 0; padding: 10px 18px; font-size: 1rem; }
+            .container, .main { 
+                margin-left: auto; 
+                margin-right: auto; 
+                margin-top: 120px; 
+            }
             .site-footer {
                 font-size: 0.95rem;
                 padding: 12px 0 10px 0;
             }
         }
+        @media (max-width: 600px) {
+            .container, .main { padding: 10px; }
+            h2 { font-size: 22px; }
+        }
     </style>
 </head>
 <body>
-    <div id="header-placeholder"></div>
-    <script>
-        fetch('header.html')
-          .then(response => response.text())
-          .then(data => document.getElementById('header-placeholder').innerHTML = data);
-    </script>
+    <div id="three-bg"></div>
     <div class="sidebar">
-        <!-- Removed <h1>Financial Tools</h1> to avoid duplicate header -->
         <nav class="sidebar-nav">
             <a href="financial-calculator.html">Financial Calculator</a>
             <a href="interest-rate-calculator.html">Interest Rate Calculator</a>
@@ -201,7 +227,89 @@
             <!-- Results will be shown here -->
         </div>
     </div>
+    <footer class="site-footer">
+        &copy; 2025 Parjad Minooei
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
     <script>
+        // Money bill texture as a base64 SVG (simple green bill with $)
+        const billSVG = `
+            <svg width="128" height="64" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="120" height="56" rx="10" fill="#7ed957" stroke="#388e3c" stroke-width="6"/>
+                <text x="64" y="40" font-size="32" font-family="Arial" fill="#388e3c" text-anchor="middle" alignment-baseline="middle">$</text>
+            </svg>
+        `;
+        const billTexture = new THREE.TextureLoader().load(
+            'data:image/svg+xml;base64,' + btoa(billSVG)
+        );
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setClearColor(0x000000, 0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('three-bg').appendChild(renderer.domElement);
+
+        // Create floating money bills (as planes)
+        const bills = [];
+        const billGeometry = new THREE.PlaneGeometry(2, 1);
+        for (let i = 0; i < 18; i++) {
+            const material = new THREE.MeshBasicMaterial({
+                map: billTexture,
+                transparent: true,
+                opacity: 0.7 + Math.random() * 0.2,
+                side: THREE.DoubleSide,
+                depthWrite: false
+            });
+            const mesh = new THREE.Mesh(billGeometry, material);
+            mesh.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 12,
+                (Math.random() - 0.5) * 20
+            );
+            mesh.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                Math.random() * Math.PI
+            );
+            mesh.userData = {
+                baseX: mesh.position.x,
+                baseY: mesh.position.y,
+                baseZ: mesh.position.z,
+                speed: Math.random() * 0.5 + 0.5,
+                rotSpeed: Math.random() * 0.01 + 0.005
+            };
+            scene.add(mesh);
+            bills.push(mesh);
+        }
+        camera.position.z = 12;
+
+        let mouse = { x: 0, y: 0 };
+        document.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.0005;
+            bills.forEach((bill, i) => {
+                bill.position.y = bill.userData.baseY + Math.sin(time * bill.userData.speed + i) * 1.2 + mouse.y * 2;
+                bill.position.x = bill.userData.baseX + Math.cos(time * bill.userData.speed + i) * 1.2 + mouse.x * 2;
+                bill.rotation.z += bill.userData.rotSpeed;
+                bill.rotation.y += bill.userData.rotSpeed * 0.5;
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Debt optimizer logic
         function addDebtRow() {
             const row = document.createElement('div');
             row.className = 'debt-row';

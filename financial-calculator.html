@@ -5,11 +5,18 @@
     <title>Financial Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #f4f4f4 60%, #eaf6fb 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            position: relative;
+            overflow-y: auto;
+        }
+        #three-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
         }
         .sidebar {
             position: fixed;
@@ -17,9 +24,9 @@
             left: 0;
             width: 260px;
             height: 100vh;
-            background: #5EA4C2;
+            background: linear-gradient(135deg, #5EA4C2 70%, #816CA6 100%);
             color: #fff;
-            box-shadow: 2px 0 16px #5ea4c233;
+            box-shadow: 2px 0 24px #5ea4c244;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -65,128 +72,332 @@
             opacity: 0.7;
         }
         .container {
-            max-width: 700px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 32px 28px;
-            border-radius: 18px;
-            box-shadow: 0 2px 16px #bbb;
+            max-width: 350px;
+            margin: 6px auto;
+            background: linear-gradient(120deg, #fff 90%, #eaf6fb 100%);
+            padding: 6px 8px;
+            border-radius: 6px;
+            box-shadow: 0 4px 16px #6093c033, 0 1px 4px #e0eaff;
+            border: 1px solid #e3eaf3;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
+            z-index: 1;
+            overflow-y: auto;
+            max-height: 90vh;
         }
-        h2 { text-align: center; margin-bottom: 12px; color: #5EA4C2; font-size: 2rem; }
-        .desc { text-align: center; color: #555; margin-bottom: 24px; font-size: 16px; }
+        h2 { text-align: center; margin-bottom: 1px; color: #5EA4C2; font-size: 0.9rem; }
+        .desc { text-align: center; color: #555; margin-bottom: 4px; font-size: 10px; }
         .section-title {
-            font-size: 18px;
-            margin-top: 32px;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            margin-bottom: 4px;
             color: #816CA6;
-            font-weight: bold;
-            border-bottom: 2px solid #f4f4f4;
-            padding-bottom: 6px;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            border-bottom: 1px solid #f4f4f4;
+            padding-bottom: 1px;
+            letter-spacing: 0.1px;
+            position: relative;
         }
-        label { display: block; margin-top: 18px; font-weight: bold; color: #6093C0; }
-        .input-group { margin-bottom: 18px; }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, #816CA6 0%, #5EA4C2 100%);
+            border-radius: 1px;
+        }
+        label { 
+            display: block; 
+            margin-top: 0; 
+            margin-bottom: 0;
+            font-weight: 600; 
+            color: #6093C0;
+            font-size: 0.65rem;
+            letter-spacing: 0.1px;
+        }
+        .input-group { 
+            margin-bottom: 4px; 
+            position: relative;
+        }
         input, textarea {
             width: 100%;
-            padding: 12px;
-            margin-top: 4px;
-            border-radius: 6px;
-            border: 1.5px solid #ccc;
-            font-size: 16px;
-            background: #f9f9fc;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            padding: 4px 6px;
+            margin-top: 0;
+            border-radius: 2px;
+            border: 1px solid #e3eaf3;
+            font-size: 10px;
+            background: linear-gradient(135deg, #f9f9fc 0%, #f5f7ff 100%);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
         input:focus, textarea:focus {
             border-color: #816CA6;
             outline: none;
-            box-shadow: 0 0 0 2px #816ca633;
+            box-shadow: 0 0 0 4px #816ca615;
+            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+            transform: translateY(-2px);
+        }
+        input::placeholder, textarea::placeholder {
+            color: #999;
+            font-style: italic;
         }
         .button-row {
             display: flex;
-            gap: 12px;
-            margin-top: 24px;
+            gap: 4px;
+            margin-top: 6px;
         }
         button, .button-row button {
             flex: 1;
-            padding: 13px;
-            background: #816CA6;
+            padding: 4px 8px;
+            background: linear-gradient(135deg, #816CA6 0%, #5EA4C2 100%);
             color: #fff;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 2px;
+            font-size: 0.65rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px #816ca62a;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 4px #816ca625;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.1px;
+        }
+        button::before, .button-row button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        button:hover::before, .button-row button:hover::before {
+            left: 100%;
         }
         button:hover, .button-row button:hover {
-            background: #90568B;
-            box-shadow: 0 4px 16px #90568b2a;
+            background: linear-gradient(135deg, #90568B 0%, #5EA4C2 100%);
+            box-shadow: 0 8px 32px #90568b35;
+            transform: translateY(-3px) scale(1.02);
         }
-        #clearBtn { background: #aaa; }
-        #clearBtn:hover { background: #888; }
+        button:active, .button-row button:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+        #clearBtn { 
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            box-shadow: 0 4px 16px #6c757d25;
+        }
+        #clearBtn:hover { 
+            background: linear-gradient(135deg, #5a6268 0%, #343a40 100%);
+            box-shadow: 0 8px 32px #5a626835;
+        }
         .results {
-            margin-top: 28px;
-            background: linear-gradient(120deg, #f1f7ff 80%, #eaf6fb 100%);
-            padding: 28px 18px 20px 18px;
-            border-radius: 18px;
-            box-shadow: 0 2px 12px #6093c022, 0 1.5px 8px #e0eaff;
-            border: 2px solid #5EA4C2;
+            margin-top: 6px;
+            background: linear-gradient(135deg, #f1f7ff 0%, #eaf6fb 100%);
+            padding: 6px 4px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px #6093c025, 0 1px 2px #e0eaff;
+            border: 1px solid #5EA4C2;
             animation: fadeIn 0.7s;
             text-align: left;
-            max-width: 480px;
+            max-width: 300px;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .results::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #816CA6 0%, #5EA4C2 100%);
         }
         .results strong {
-            font-size: 1.25rem;
+            font-size: 0.7rem;
             color: #816CA6;
             display: block;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
+            margin-bottom: 3px;
+            letter-spacing: 0.1px;
+            text-align: center;
+            font-weight: 700;
         }
         .result-row {
-            margin-top: 16px;
-            font-size: 1.08rem;
+            margin-top: 3px;
+            font-size: 0.65rem;
             display: flex;
             align-items: center;
-            background: #fff;
-            border-radius: 8px;
-            padding: 10px 14px;
-            box-shadow: 0 1px 4px #e0eaff;
+            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+            border-radius: 2px;
+            padding: 3px 4px;
+            box-shadow: 0 1px 2px #e0eaff;
             border: 1px solid #e3eaf3;
-            margin-bottom: 8px;
+            margin-bottom: 1px;
+            transition: all 0.3s ease;
+        }
+        .result-row:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px #6093c020;
+            border-color: #816CA6;
         }
         .result-label {
-            min-width: 170px;
-            font-weight: 500;
+            min-width: 60px;
+            font-weight: 600;
             color: #6093C0;
-            font-size: 1rem;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 1px;
         }
         .result-value {
-            font-family: 'Consolas', monospace;
+            font-family: 'Consolas', 'Monaco', monospace;
             color: #964069;
-            font-size: 1.08rem;
-            margin-left: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 0.65rem;
+            margin-left: 1px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
         }
-        .error { color: #964069; margin-top: 12px; font-size: 15px; }
-        .tooltip {
-            border-bottom: 1px dotted #888;
-            cursor: help;
-            text-decoration: none;
-            margin-left: 4px;
-            color: #6093C0;
-            font-size: 15px;
+        .error { 
+            color: #dc3545; 
+            margin-top: 3px; 
+            font-size: 0.6rem;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 1px solid #feb2b2;
+            border-radius: 2px;
+            padding: 2px 4px;
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            animation: shake 0.5s ease-in-out;
         }
-        .card {
-            background: #f9f9fc;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .error::before {
+            content: '⚠️';
+            font-size: 1.2rem;
+        }
+        .success {
+            color: #28a745;
+            margin-top: 16px;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+            border: 1.5px solid #9ae6b4;
             border-radius: 8px;
             padding: 12px 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 1px 4px #e0eaff;
-            border: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .success::before {
+            content: '✅';
+            font-size: 1.2rem;
+        }
+        .tooltip {
+            border-bottom: 2px dotted #816CA6;
+            cursor: help;
+            text-decoration: none;
+            margin-left: 6px;
+            color: #816CA6;
+            font-size: 1rem;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .tooltip:hover {
+            color: #5EA4C2;
+            border-bottom-color: #5EA4C2;
+        }
+        .tooltip::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #2d3748;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .tooltip:hover::after,
+        .tooltip:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+        .card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #eaf6fb 100%);
+            border-radius: 4px;
+            padding: 4px 6px;
+            margin-bottom: 3px;
+            box-shadow: 0 1px 4px #6093c015;
+            border: 1px solid #e3eaf3;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 6px 24px #6093c025;
+            border-color: #816CA6;
+        }
+        .site-footer {
+            width: 100%;
+            text-align: center;
+            padding: 18px 0 14px 0;
+            font-size: 1rem;
+            color: #fff;
+            background: linear-gradient(135deg, #5EA4C2 70%, #816CA6 100%);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            z-index: 1002;
+            letter-spacing: 1px;
+            box-shadow: 0 -2px 12px #5ea4c233;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            margin-top: 40px;
+            margin-bottom: 24px;
+            color: #816CA6;
+            font-weight: 700;
+            border-bottom: 3px solid #f4f4f4;
+            padding-bottom: 12px;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #816CA6 0%, #5EA4C2 100%);
+            border-radius: 2px;
         }
         @media (max-width: 900px) {
             .sidebar { width: 100vw; height: auto; flex-direction: row; padding: 0; box-shadow: 0 2px 12px #5ea4c233; }
@@ -196,6 +407,10 @@
                 margin-left: auto; 
                 margin-right: auto; 
                 margin-top: 120px; 
+            }
+            .site-footer {
+                font-size: 0.95rem;
+                padding: 12px 0 10px 0;
             }
         }
         @media (max-width: 600px) {
@@ -226,14 +441,8 @@
     </style>
 </head>
 <body>
-    <div id="header-placeholder"></div>
-    <script>
-        fetch('header.html')
-          .then(response => response.text())
-          .then(data => document.getElementById('header-placeholder').innerHTML = data);
-    </script>
+    <div id="three-bg"></div>
     <div class="sidebar">
-        <!-- Removed <h1>Financial Tools</h1> to avoid duplicate header -->
         <nav class="sidebar-nav">
             <a href="financial-calculator.html" class="active">Financial Calculator</a>
             <a href="interest-rate-calculator.html">Interest Rate Calculator</a>
@@ -298,7 +507,89 @@
             </div>
         </div>
     </div>
+    <footer class="site-footer">
+        &copy; 2025 Parjad Minooei
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
     <script>
+        // Money bill texture as a base64 SVG (simple green bill with $)
+        const billSVG = `
+            <svg width="128" height="64" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="120" height="56" rx="10" fill="#7ed957" stroke="#388e3c" stroke-width="6"/>
+                <text x="64" y="40" font-size="32" font-family="Arial" fill="#388e3c" text-anchor="middle" alignment-baseline="middle">$</text>
+            </svg>
+        `;
+        const billTexture = new THREE.TextureLoader().load(
+            'data:image/svg+xml;base64,' + btoa(billSVG)
+        );
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setClearColor(0x000000, 0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('three-bg').appendChild(renderer.domElement);
+
+        // Create floating money bills (as planes)
+        const bills = [];
+        const billGeometry = new THREE.PlaneGeometry(2, 1);
+        for (let i = 0; i < 18; i++) {
+            const material = new THREE.MeshBasicMaterial({
+                map: billTexture,
+                transparent: true,
+                opacity: 0.7 + Math.random() * 0.2,
+                side: THREE.DoubleSide,
+                depthWrite: false
+            });
+            const mesh = new THREE.Mesh(billGeometry, material);
+            mesh.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 12,
+                (Math.random() - 0.5) * 20
+            );
+            mesh.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                Math.random() * Math.PI
+            );
+            mesh.userData = {
+                baseX: mesh.position.x,
+                baseY: mesh.position.y,
+                baseZ: mesh.position.z,
+                speed: Math.random() * 0.5 + 0.5,
+                rotSpeed: Math.random() * 0.01 + 0.005
+            };
+            scene.add(mesh);
+            bills.push(mesh);
+        }
+        camera.position.z = 12;
+
+        let mouse = { x: 0, y: 0 };
+        document.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.0005;
+            bills.forEach((bill, i) => {
+                bill.position.y = bill.userData.baseY + Math.sin(time * bill.userData.speed + i) * 1.2 + mouse.y * 2;
+                bill.position.x = bill.userData.baseX + Math.cos(time * bill.userData.speed + i) * 1.2 + mouse.x * 2;
+                bill.rotation.z += bill.userData.rotSpeed;
+                bill.rotation.y += bill.userData.rotSpeed * 0.5;
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Calculator logic
         const form = document.getElementById('financeForm');
         const initialInput = document.getElementById('initialInvestment');
         const cashFlowsInput = document.getElementById('cashFlows');
@@ -413,6 +704,13 @@
             roiDiv.textContent = 'Return on Investment (ROI): ' + (isFinite(roi) ? formatPercent(roi) : 'N/A');
 
             resultsDiv.style.display = 'block';
+        });
+
+        clearBtn.addEventListener('click', function() {
+            form.reset();
+            errorMsg.textContent = '';
+            resultsDiv.style.display = 'none';
+            [initialInput, cashFlowsInput, discountRateInput].forEach(el => el.style.borderColor = '#ccc');
         });
     </script>
 </body>
